@@ -160,6 +160,8 @@ cython_debug/
 
 .vscode/
 
+database.db
+
 photo_2023-12-04 19.34.38.jpeg
 poetry.lock
 *.ipynb
