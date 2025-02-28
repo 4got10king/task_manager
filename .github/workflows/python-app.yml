@@ -24,7 +24,7 @@ jobs:
         pip install black ruff
 
     - name: Run Black
-      run: cd backend && black --check .
+      run: cd backend && black --check . --exclude="alembic/versions"
 
     - name: Run Ruff
       run: cd backend && ruff check .
