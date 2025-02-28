@@ -1,8 +1,8 @@
 """tasks
 
-Revision ID: a74c015cd64a
+Revision ID: 4337246f7240
 Revises: 
-Create Date: 2025-02-28 12:03:23.703690
+Create Date: 2025-02-28 12:43:41.957389
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "a74c015cd64a"
+revision: str = "4337246f7240"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
