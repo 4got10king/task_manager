@@ -1,5 +1,5 @@
 from pathlib import Path
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 from pydantic import computed_field
 
 
@@ -7,9 +7,9 @@ class DBSettings(BaseSettings):
     """
     Настройки подключения к SQLite базе данных.
     """
-    
-    NAME: str = "tasks.db"
-    
+
+    NAME: str = "database.db"
+
     @property
     def db_path(self) -> Path:
         """Полный путь к файлу базы данных"""
@@ -31,4 +31,9 @@ class TestDBSettings(DBSettings):
     Настройки для тестовой базы данных.
     Использует отдельный файл базы данных для тестов.
     """
+
     NAME: str = ":memory:"
+
+
+db_settings = DBSettings()
+test_db_settings = TestDBSettings()

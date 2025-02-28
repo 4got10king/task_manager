@@ -30,6 +30,7 @@ class AppSettings(BaseSettings):
         BACKEND_SERVER__HOST=localhost
         BACKEND_SERVER__WORKERS=4
     """
+
     model_config = SettingsConfigDict(
         env_file=Path(__file__).resolve().parent.parent.parent / ".env",
         env_file_encoding="utf-8",
@@ -43,6 +44,7 @@ class AppSettings(BaseSettings):
     METHODS: List[str]
     HEADERS: List[str]
     origins: List[str] = ["*"]
+
     @property
     def app_settings(self):
         return self

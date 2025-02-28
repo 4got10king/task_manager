@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from config.db import db_settings
 from .db_accessor import DatabaseAccessor
 
-database_accessor = DatabaseAccessor(db_settings=db_settings)
+database_accessor = DatabaseAccessor(database_url=db_settings.dsn_async)
 
 database_accessor.run()
 

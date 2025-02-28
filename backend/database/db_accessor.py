@@ -1,21 +1,21 @@
 import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from pathlib import Path
 
-from sqlalchemy.exc import ProgrammingError
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
 from sqlalchemy.orm import DeclarativeBase
 
 logger = logging.getLogger("database")
 
+
 class DatabaseAccessor:
     """
     Класс для работы с SQLite базой данных через асинхронное подключение.
     Поддерживает миграции через Alembic.
     """
+
     def __init__(self, database_url: str):
         """
         Args:
@@ -28,15 +28,11 @@ class DatabaseAccessor:
     def run(self) -> None:
         """Инициализация подключения к базе данных"""
         self._engine = create_async_engine(
-            self._database_url,
-            connect_args={"check_same_thread": False},
-            echo=False
+            self._database_url, connect_args={"check_same_thread": False}, echo=False
         )
-        
+
         self._async_session_maker = sessionmaker(
-            bind=self._engine,
-            expire_on_commit=False,
-            class_=AsyncSession
+            bind=self._engine, expire_on_commit=False, class_=AsyncSession
         )
 
     async def stop(self) -> None:
@@ -48,13 +44,13 @@ class DatabaseAccessor:
     async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
         """
         Контекстный менеджер для получения сессии базы данных.
-        
+
         Yields:
             AsyncSession: Асинхронная сессия SQLAlchemy
         """
         if not self._async_session_maker:
             raise RuntimeError("Database not initialized. Call .run() first")
-            
+
         async with self._async_session_maker() as session:
             yield session
 
@@ -62,7 +58,7 @@ class DatabaseAccessor:
         """
         Создание всех таблиц в базе данных.
         Использовать только если не используется Alembic.
-        
+
         Args:
             Base: Базовый класс моделей SQLAlchemy
         """
@@ -79,17 +75,16 @@ class DatabaseAccessor:
             logger.error(f"Failed to connect to the database: {e}")
             raise
 
-    async def check_alembic_version(self) -> None:
-        """Проверка версии миграций Alembic"""
-        try:
-            async with self.get_session() as session:
-                result = await session.execute(
-                    text("SELECT version_num FROM alembic_version")
-                )
-                version = result.scalar()
-                if version:
-                    logger.info(f"Current Alembic version: {version}")
-                else:
-                    logger.warning("No Alembic version found")
-        except ProgrammingError:
-            logger.warning("Alembic version table not found. Migrations may not be applied")
+    def get_async_session_maker(self) -> sessionmaker:
+        """
+        Получение фабрики сессий для создания асинхронных сессий.
+
+        Returns:
+            sessionmaker: Фабрика для создания асинхронных сессий
+
+        Raises:
+            RuntimeError: Если база данных не была инициализирована
+        """
+        if not self._async_session_maker:
+            raise RuntimeError("Database not initialized. Call .run() first")
+        return self._async_session_maker

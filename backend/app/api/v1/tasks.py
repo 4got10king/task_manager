@@ -1,52 +1,35 @@
 from fastapi import APIRouter
+from app.schemas.tasks import TasksCreate, TasksUpdate, TasksResponse, TasksList
+from app.service.tasks import TasksService
 
 router = APIRouter(prefix="/tasks", tags=["CRUD to tasks"])
 
-@router.get("")
-async def get_one_task():
-    """
-    Возвращает список всех задач из базы данных.
-    """
-    pass
 
-@router.get("/{task_id}")
-async def get_tasks():
-    """
-    Возвращает задачу по task_id.
-    Если задача не найдена, возвращает 404 Not Found.
-    
-    Аргументы:
-        task_id (int): id задачи для получения
-    """
-    pass
+@router.get("", response_model=TasksList)
+async def get_tasks() -> TasksList:
+    """Получение списка всех задач"""
+    return await TasksService.get_all_tasks()
 
-@router.post("")
-async def post_tasks():
-    """
-    Принимает JSON с данными о задаче.
-    Возвращает id созданной задачи.
-    """ 
-    pass
 
-@router.put("/{task_id}")
-async def put_tasks(task_id: int):
-    """
-    Принимает JSON с обновленными данными задачи.
-    Возвращает полностью обновленную задачу.
-    Если задача не найдена, возвращает 404 Not Found.
-    
-    Аргументы:
-        task_id (int): id задачи, которуб нужно обновить
-    """
-    pass
+@router.get("/{task_id}", response_model=TasksResponse)
+async def get_tasks_by_id(task_id: int) -> TasksResponse:
+    """Получение задачи по id"""
+    return await TasksService.get_task_by_id(task_id)
 
-@router.delete("/{task_id}")
-async def delete_task(task_id: int):
-    """
-    Удаляет задачу из базы данных.
-    Ничего не возвращает в теле ответа.
 
-    Аргументы:
-        task_id (int): id задачи, которую нужно удалить
-    """
-    pass
+@router.post("", response_model=TasksResponse, status_code=201)
+async def create_tasks(task_data: TasksCreate) -> TasksResponse:
+    """Создание новой задачи"""
+    return await TasksService.create_task(task_data)
+
+
+@router.put("/{task_id}", response_model=TasksResponse)
+async def update_tasks(task_id: int, task_data: TasksUpdate) -> TasksResponse:
+    """Обновление задачи"""
+    return await TasksService.update_task(task_id, task_data)
+
+
+@router.delete("/{task_id}", status_code=204)
+async def delete_task(task_id: int) -> None:
+    """Удаление задачи"""
+    return await TasksService.delete_task(task_id)

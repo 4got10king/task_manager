@@ -5,10 +5,14 @@ from typing import Type
 
 from database.db import database_accessor
 
+from database.repository.tasks import TasksRepository
+
 
 class IUnitOfWork(ABC):
     """Interface for Unit of Work pattern."""
-    
+
+    tasks: Type[TasksRepository]
+
     @abstractmethod
     def __init__(self):
         """Initialize the Unit of Work instance."""
@@ -38,6 +42,7 @@ class UnitOfWork:
         """Enter the context manager."""
         self.session = self.session_fabric()
 
+        self.tasks = TasksRepository(self.session)
 
     async def __aexit__(self, exc_type, exc, tb):
         if exc_type is None:

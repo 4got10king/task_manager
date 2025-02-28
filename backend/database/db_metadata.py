@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.inspection import inspect
 
+
 class Base(DeclarativeBase):
     @abstractmethod
     def get_schema(self) -> BaseModel:
