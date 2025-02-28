@@ -3,7 +3,7 @@ name = "task-manager"
 version = "0.1.0"
 description = ""
 authors = ["4got10king <Aldavletshina77654@yandex.ru>"]
-readme = "README.md"
+readme = "../README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
