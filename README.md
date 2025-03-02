@@ -45,7 +45,6 @@ DELETE /tasks/{id} - Удаляет задачу из базы данных.
 Дополнительные задачи
 Тесты сделать
 
-
 Ссылки
 FastAPI Documentation
 SQLAlchemy Documentation
